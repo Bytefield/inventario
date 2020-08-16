@@ -1,20 +1,24 @@
+require('dotenv').config()
 const express = require('express')
-const mysql = require('mysql')
+const MongoClient = require('mongodb').MongoClient
+
+const dbUser = process.env.DBUSER
+const dbPassword = process.env.DBPASSWORD
+const dbName = process.env.DBNAME
+
+const uri = "mongodb://" + dbUser + ":" + dbPassword + "@ds211289.mlab.com:11289/inventario"
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  if (err) console.error(err)
+  client.close(() => console.log('closing mongo'));
+});
+
 
 const PORT = process.env.PORT || 3000
 
 const app = express()
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '*9CFBBC772F3F6C106020035386DA5BBBF1249A11',
-    database: 'inventario-sql'
-})
-
-connection.connect(function(err) {
-    (err) ? console.log(err) : console.log(connection)
-})
 
 require('./routes/html-routes')(app)
 
