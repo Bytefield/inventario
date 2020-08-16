@@ -6,13 +6,21 @@ const dbUser = process.env.DBUSER
 const dbPassword = process.env.DBPASSWORD
 const dbName = process.env.DBNAME
 
-const uri = "mongodb://" + dbUser + ":" + dbPassword + "@ds211289.mlab.com:11289/inventario"
+const uri = "mongodb://" + dbUser + ":" + dbPassword + "@ds211289.mlab.com:11289/" + dbName
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  if (err) console.error(err)
-  client.close(() => console.log('closing mongo'));
+    const collection = client.db("test").collection("devices");
+    if (err) {
+        console.error(err)
+        client.close(() => {
+            console.log('closing mongo')
+            return 0
+        })
+    } else {
+        console.log('Connection to Mongo stablished!')
+    }
+  
 });
 
 
